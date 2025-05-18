@@ -6,4 +6,5 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "iccad-contest==0.0.9",
+    "torch>=2.7.0",
 ]
