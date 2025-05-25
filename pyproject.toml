@@ -1,7 +1,7 @@
 [project]
 name = "ee215a-project-7"
 version = "0.1.0"
-description = "Add your description here"
+description = "Simple Microarchitecture Design Space Exploration Algorithm"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
