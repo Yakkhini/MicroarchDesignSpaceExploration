@@ -123,6 +123,7 @@
           };
         shellHook = ''
           unset PYTHONPATH
+          source .venv/bin/activate
         '';
       };
 
