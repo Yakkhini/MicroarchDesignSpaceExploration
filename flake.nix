@@ -108,6 +108,7 @@
         packages = [
           python
           pkgs.uv
+          pkgs.just
         ];
         env =
           {
