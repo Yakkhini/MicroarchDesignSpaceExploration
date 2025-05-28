@@ -17,6 +17,12 @@ import numpy as np
 from iccad_contest.abstract_optimizer import AbstractOptimizer
 from iccad_contest.design_space_exploration import experiment
 
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.core.evaluator import Evaluator
+from pymoo.core.problem import Problem
+from pymoo.core.termination import NoTermination
+from pymoo.problems.static import StaticProblem
+
 
 class RandomSearchOptimizer(AbstractOptimizer):
     primary_import = "iccad_contest"
@@ -42,15 +48,21 @@ class RandomSearchOptimizer(AbstractOptimizer):
             list of `self.n_suggestions` suggestion(s).
             each suggestion is a microarchitecture embedding.
         """
-        x_guess = np.random.choice(
-            range(1, self.design_space.size + 1), size=self.n_suggestions
-        )
-        return [
-            self.design_space.vec_to_microarchitecture_embedding(
-                self.design_space.idx_to_vec(_x_guess)
+        try:
+            raise NotImplementedError("optimizer is not implemented yet.")
+
+        except AssertionError:
+            x_guess = np.random.choice(
+                range(1, self.design_space.size + 1), size=self.n_suggestions
             )
-            for _x_guess in x_guess
-        ]
+            potential_suggest = [
+                self.design_space.vec_to_microarchitecture_embedding(
+                    self.design_space.idx_to_vec(_x_guess)
+                )
+                for _x_guess in x_guess
+            ]
+
+            return potential_suggest
 
     def observe(self, x, y):
         """
