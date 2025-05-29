@@ -101,7 +101,8 @@ class NSGA2Optimizer(AbstractOptimizer):
 
     def variables_to_vector(self, variables):
         vec = [
-            element % self.variable_choose_mod_list[i][variables[0]]
+            self.design_space.component_offset[variables[0] - 1][i]
+            + int((element % self.variable_choose_mod_list[i][variables[0] - 1]))
             for i, element in enumerate(variables[1:])
         ]
 
@@ -119,7 +120,9 @@ class NSGA2Optimizer(AbstractOptimizer):
         """
         pop = self.algorithm.ask()
         potential_suggest = [
-            self.design_space.vec_to_microarchitecture_embedding(x)
+            self.design_space.vec_to_microarchitecture_embedding(
+                self.variables_to_vector(x)
+            )
             for x in pop.get("X")
         ]
 
