@@ -82,21 +82,13 @@ class NSGA2Optimizer(AbstractOptimizer):
             list of `self.n_suggestions` suggestion(s).
             each suggestion is a microarchitecture embedding.
         """
-        try:
-            raise NotImplementedError("optimizer is not implemented yet.")
+        pop = self.algorithm.ask()
+        potential_suggest = [
+            self.design_space.vec_to_microarchitecture_embedding(x)
+            for x in pop.get("X")
+        ]
 
-        except AssertionError:
-            x_guess = np.random.choice(
-                range(1, self.design_space.size + 1), size=self.n_suggestions
-            )
-            potential_suggest = [
-                self.design_space.vec_to_microarchitecture_embedding(
-                    self.design_space.idx_to_vec(_x_guess)
-                )
-                for _x_guess in x_guess
-            ]
-
-            return potential_suggest
+        return potential_suggest
 
     def observe(self, x, y):
         """
