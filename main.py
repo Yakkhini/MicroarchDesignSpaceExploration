@@ -21,6 +21,9 @@ from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.core.evaluator import Evaluator
 from pymoo.core.problem import Problem
 from pymoo.core.termination import NoTermination
+from pymoo.operators.crossover.sbx import SBX
+from pymoo.operators.mutation.pm import PM
+from pymoo.operators.repair.rounding import RoundingRepair
 from pymoo.operators.sampling.rnd import IntegerRandomSampling
 from pymoo.problems.static import StaticProblem
 
@@ -62,12 +65,13 @@ class NSGA2Optimizer(AbstractOptimizer):
             x_upper_bound_list=self.variable_upper_bound_list,
         )
 
-        self.veriable_type = int
-
         self.n_suggestions = 20
 
         self.algorithm = NSGA2(
-            pop_size=self.n_suggestions, sampling=IntegerRandomSampling()
+            pop_size=self.n_suggestions,
+            sampling=IntegerRandomSampling(),
+            crossover=SBX(eta=15, prob=0.9, repair=RoundingRepair()),
+            mutation=PM(eta=20, repair=RoundingRepair()),
         )
 
         self.algorithm.setup(
