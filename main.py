@@ -21,6 +21,7 @@ from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.core.evaluator import Evaluator
 from pymoo.core.problem import Problem
 from pymoo.core.termination import NoTermination
+from pymoo.operators.sampling.rnd import IntegerRandomSampling
 from pymoo.problems.static import StaticProblem
 
 
@@ -70,7 +71,9 @@ class NSGA2Optimizer(AbstractOptimizer):
 
         self.n_suggestions = 20
 
-        self.algorithm = NSGA2(pop_size=self.n_suggestions)
+        self.algorithm = NSGA2(
+            pop_size=self.n_suggestions, sampling=IntegerRandomSampling()
+        )
 
         self.algorithm.setup(
             self.problem, termination=termination, seed=1, verbose=False
