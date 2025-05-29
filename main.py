@@ -35,7 +35,7 @@ class MOOWrappedProblem(Problem):
         )
 
 
-class RandomSearchOptimizer(AbstractOptimizer):
+class NSGA2Optimizer(AbstractOptimizer):
     primary_import = "iccad_contest"
 
     def __init__(self, design_space):
@@ -113,4 +113,4 @@ class RandomSearchOptimizer(AbstractOptimizer):
 
 
 if __name__ == "__main__":
-    experiment(RandomSearchOptimizer)
+    experiment(NSGA2Optimizer)
