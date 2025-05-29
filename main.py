@@ -52,9 +52,10 @@ class NSGA2Optimizer(AbstractOptimizer):
         self.num_of_variables = len(self.design_space.idx_to_vec(1))
 
         self.variables_upper_bound_list = []
-
         for unit_info_values in self.design_space.components_mappings.values():
             self.variables_upper_bound_list.append(int(unit_info_values.keys()[-1]))
+
+        termination = NoTermination()
 
         self.problem = MOOWrappedProblem(
             num_of_objectives=self.num_of_objectives,
@@ -69,7 +70,7 @@ class NSGA2Optimizer(AbstractOptimizer):
         self.algorithm = NSGA2(pop_size=self.n_suggestions)
 
         self.algorithm.setup(
-            self.problem, termination=("n_gen", 10), seed=1, verbose=False
+            self.problem, termination=termination, seed=1, verbose=False
         )
 
     def suggest(self):
