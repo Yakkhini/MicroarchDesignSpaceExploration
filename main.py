@@ -50,13 +50,8 @@ class NSGA2Optimizer(AbstractOptimizer):
         AbstractOptimizer.__init__(self, design_space)
 
         self.num_of_objectives = 3
-        self.num_of_variables = len(self.design_space.idx_to_vec(1))
 
-        self.variables_upper_bound_list = []
-        for unit_info_values in self.design_space.components_mappings.values():
-            self.variables_upper_bound_list.append(
-                int(list(unit_info_values.keys())[-1])
-            )
+        self.construct_variable_choose_info()
         print("Variables upper bound list:", self.variables_upper_bound_list)
 
         termination = NoTermination()
@@ -78,6 +73,32 @@ class NSGA2Optimizer(AbstractOptimizer):
         self.algorithm.setup(
             self.problem, termination=termination, seed=1, verbose=False
         )
+
+    def construct_variable_choose_info(self):
+        components = self.design_space.components
+        component_dims = self.design_space.component_dims
+        component_offset = self.design_space.component_offset
+        print("components:", components)
+        print("component_dims:", component_dims)
+        print("component_offset:", component_offset)
+
+        # Use tree data structure path to represent a kind of valid microarchitecture.
+        # So `root_out_degree` is the number of subdesigns, not components.
+        self.root_out_degree = len(component_dims)
+
+        # Need to make a choice for every component in a subdesign
+        self.variable_choose_mod_list = np.transpose(np.array(component_dims)).tolist()
+        self.variable_choose_lcm_list = [
+            int(np.lcm.reduce(x)) for x in self.variable_choose_mod_list
+        ]
+
+        print("Variable choose mod list:", self.variable_choose_mod_list)
+        print("Variable choose lcm list:", self.variable_choose_lcm_list)
+
+        self.variable_upper_bound_list = self.variable_choose_lcm_list.insert(
+            0, self.root_out_degree
+        )
+        self.num_of_variables = len(self.variable_upper_bound_list)
 
     def suggest(self):
         """
