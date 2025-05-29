@@ -52,14 +52,14 @@ class NSGA2Optimizer(AbstractOptimizer):
         self.num_of_objectives = 3
 
         self.construct_variable_choose_info()
-        print("Variables upper bound list:", self.variables_upper_bound_list)
+        print("Variables upper bound list:", self.variable_upper_bound_list)
 
         termination = NoTermination()
 
         self.problem = MOOWrappedProblem(
             num_of_objectives=self.num_of_objectives,
             num_of_variables=self.num_of_variables,
-            x_upper_bound_list=self.variables_upper_bound_list,
+            x_upper_bound_list=self.variable_upper_bound_list,
         )
 
         self.veriable_type = int
@@ -95,9 +95,8 @@ class NSGA2Optimizer(AbstractOptimizer):
         print("Variable choose mod list:", self.variable_choose_mod_list)
         print("Variable choose lcm list:", self.variable_choose_lcm_list)
 
-        self.variable_upper_bound_list = self.variable_choose_lcm_list.insert(
-            0, self.root_out_degree
-        )
+        self.variable_upper_bound_list = self.variable_choose_lcm_list
+        self.variable_upper_bound_list.insert(0, self.root_out_degree)
         self.num_of_variables = len(self.variable_upper_bound_list)
 
     def variables_to_vector(self, variables):
