@@ -145,7 +145,15 @@ class NSGA2Optimizer(AbstractOptimizer):
         """
         problem = self.problem
 
-        static = StaticProblem(problem, F=y)
+        y_np_array = np.array(y)
+
+        f1 = np.negative(y_np_array[:, 0])  # Performance
+        f2 = y_np_array[:, 1]  # Power
+        f3 = y_np_array[:, 2]  # Area
+
+        F = np.column_stack((f1, f2, f3))
+
+        static = StaticProblem(problem, F=F)
         Evaluator().eval(static, self.pop)
 
         self.algorithm.tell(infills=self.pop)
