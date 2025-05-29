@@ -100,6 +100,14 @@ class NSGA2Optimizer(AbstractOptimizer):
         )
         self.num_of_variables = len(self.variable_upper_bound_list)
 
+    def variables_to_vector(self, variables):
+        vec = [
+            element % self.variable_choose_mod_list[i][variables[0]]
+            for i, element in enumerate(variables[1:])
+        ]
+
+        return vec
+
     def suggest(self):
         """
         get a suggestion from the optimizer.
