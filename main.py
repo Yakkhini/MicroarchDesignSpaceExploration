@@ -118,12 +118,12 @@ class NSGA2Optimizer(AbstractOptimizer):
             list of `self.n_suggestions` suggestion(s).
             each suggestion is a microarchitecture embedding.
         """
-        pop = self.algorithm.ask()
+        self.pop = self.algorithm.ask()
         potential_suggest = [
             self.design_space.vec_to_microarchitecture_embedding(
                 self.variables_to_vector(x)
             )
-            for x in pop.get("X")
+            for x in self.pop.get("X")
         ]
 
         return potential_suggest
@@ -139,7 +139,12 @@ class NSGA2Optimizer(AbstractOptimizer):
         y: <list> of <list>
             corresponding values where each `x` is mapped to.
         """
-        pass
+        problem = self.problem
+
+        static = StaticProblem(problem, F=y)
+        Evaluator().eval(static, self.pop)
+
+        self.algorithm.tell(infills=self.pop)
 
 
 if __name__ == "__main__":
