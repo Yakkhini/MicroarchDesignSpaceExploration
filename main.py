@@ -53,7 +53,10 @@ class NSGA2Optimizer(AbstractOptimizer):
 
         self.variables_upper_bound_list = []
         for unit_info_values in self.design_space.components_mappings.values():
-            self.variables_upper_bound_list.append(int(unit_info_values.keys()[-1]))
+            self.variables_upper_bound_list.append(
+                int(list(unit_info_values.keys())[-1])
+            )
+        print("Variables upper bound list:", self.variables_upper_bound_list)
 
         termination = NoTermination()
 
