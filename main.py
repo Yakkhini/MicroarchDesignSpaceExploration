@@ -24,6 +24,17 @@ from pymoo.core.termination import NoTermination
 from pymoo.problems.static import StaticProblem
 
 
+class MOOWrappedProblem(Problem):
+    def __init__(self, num_of_objectives, num_of_variables, x_upper_bound_list):
+        super().__init__(
+            n_var=num_of_variables,
+            n_obj=num_of_objectives,
+            xl=np.ones(num_of_variables),
+            xu=x_upper_bound_list,
+            vtype=int,
+        )
+
+
 class RandomSearchOptimizer(AbstractOptimizer):
     primary_import = "iccad_contest"
 
@@ -36,7 +47,30 @@ class RandomSearchOptimizer(AbstractOptimizer):
         design_space: <class "MicroarchitectureDesignSpace">
         """
         AbstractOptimizer.__init__(self, design_space)
-        self.n_suggestions = 1
+
+        self.num_of_objectives = 3
+        self.num_of_variables = len(self.design_space.idx_to_vec(1))
+
+        self.variables_upper_bound_list = []
+
+        for unit_info_values in self.design_space.components_mappings.values():
+            self.variables_upper_bound_list.append(int(unit_info_values.keys()[-1]))
+
+        self.problem = MOOWrappedProblem(
+            num_of_objectives=self.num_of_objectives,
+            num_of_variables=self.num_of_variables,
+            x_upper_bound_list=self.variables_upper_bound_list,
+        )
+
+        self.veriable_type = int
+
+        self.n_suggestions = 20
+
+        self.algorithm = NSGA2(pop_size=self.n_suggestions)
+
+        self.algorithm.setup(
+            self.problem, termination=("n_gen", 10), seed=1, verbose=False
+        )
 
     def suggest(self):
         """
